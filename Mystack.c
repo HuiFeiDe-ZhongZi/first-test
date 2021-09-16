@@ -40,6 +40,7 @@ int s_Pop(Mystack *pStack)
 	pStack->pTop= pStack->pTop->pNext;
 	free(pDel);
 	pDel=NULL;
+	pStack->count--;
 	return nNum;
 }
 
