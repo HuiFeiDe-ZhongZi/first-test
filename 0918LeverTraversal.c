@@ -193,7 +193,7 @@ void LevelTraversal(BinaryTree *pTree)
 	q_Init(&pQueue2);
 	//根入队
 	q_Push(pQueue1,pTree);
-	while(q_IsEmpty(pQueue1)||q_IsEmpty(pQueue2))
+	while(pTree)
 	{
 		while(!q_IsEmpty(pQueue1))
 		{
@@ -233,6 +233,8 @@ void LevelTraversal(BinaryTree *pTree)
 			if(q_IsEmpty(pQueue2))
 				printf("\n");
 		}
+		if(q_IsEmpty(pQueue1)&&q_IsEmpty(pQueue2))
+			break;
 	}
 }
 /*-------------------------------------------------------双队列换行打印-----------------------------*/
