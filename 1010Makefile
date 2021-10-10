@@ -1,0 +1,37 @@
+
+#version 节省编译时间，了解makefile运行原理
+
+#自顶向下建立依赖关系
+#自底向上执行命令
+
+#ld链接过程
+app:add.o sub.o mul.o des.o main.o
+	gcc *.o -o app
+
+#生成过程
+add.o:add.c
+	gcc -I../include -c add.c
+sub.o:sub.c
+	gcc -I../include -c sub.c
+mul.o:mul.c
+	gcc -I../include -c mul.c
+des.o:des.c
+	gcc -I../include -c des.c
+main.o:main.c
+	gcc -I../include -c main.c
+
+#file三个时间
+#最近访问时间(查看 打开 读)
+#最近修改时间(修改文件内容)
+#最近改动时间(更新文件的inode信息)
+
+#甄别改动
+
+#比较修改时间
+
+
+#三要素时间戳规定
+
+#目标文件的修改时间应该较新：依赖文件的修改时间应该较旧
+#   某一刻依赖文件时间新于目标文件，那么执行对应的命令，更新目标时间
+
