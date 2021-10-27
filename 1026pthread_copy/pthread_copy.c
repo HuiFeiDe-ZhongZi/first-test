@@ -50,7 +50,7 @@ int main(int argc,char *argv[])
 	int src_size = 0;  // 源文件大小
 	int thread_num; // 线程数量
 
-	if(arg < 3)
+	if(argc < 3)
 		sys_err("src and des no exit");
 	// 打开源文件 获取源文件大小
 	if((fdsrc = open(argv[1],O_RDONLY)) < 0)
@@ -132,6 +132,7 @@ int main(int argc,char *argv[])
 
 	// 空间释放
 	free(array);
+	pthread_attr_destroy(&attr);
 	munmap(src_add,src_size);
 	munmap(des_add,src_size);
 
