@@ -12,5 +12,5 @@ int spider_connect_webserver(int webfd,url_t node)
 	{
 		printf(" 连接 [%s] web服务器成功...\n",node.domain);
 	}
-
+	return 0;
 }
