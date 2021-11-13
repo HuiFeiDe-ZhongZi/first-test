@@ -1,0 +1,54 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<string.h>
+#include<regex.h>
+#include<sys/mman.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+
+//关键内容1: 新闻连接
+//关键内容2: 新闻标题
+//表达式内容: "<a[^>]\\+\\?href=\"\\([^\"]\\+\\?\\.shtml\\)\"[^>]\\+\\?>\\+\\?>\\([^<]\\+\\?\\)</a>")
+//表达式内容: "<a[^>]\\+\\?href=\"\\([^>]\\+\\?\\.shtml\\)\">\\([^<]\\+\\?\\)</a>"
+//表达式数量3
+
+
+int main()
+{
+	int fd = open("new.html",O_RDWR); // 打开文件大小
+
+	int fsize = lseek(fd,0,SEEK_END); // 计算文件大小
+
+	char *pstring = NULL;
+
+	pstring = mmap(NULL,fsize,PROT_READ,MAP_PRIVATE,fd,0); // 文件内容私有映射
+
+	regex_t areg;
+
+	regcomp(&areg,"<a[^>]\\+\\?href=\"\\([^>]\\+\\?\\.shtml\\)\">\\([^<]\\+\\?\\)</a>",0);
+	
+	char link_buf[4096];
+	char title_buf[1024];
+	bzero(link_buf,sizeof(link_buf));
+	bzero(title_buf,sizeof(title_buf));
+
+	regmatch_t amatch[3]; // 传出的正则数组
+
+	// 循环匹配
+	while((regexec(&areg,pstring,3,amatch,0)) == 0)
+	{
+		snprintf(link_buf,amatch[1].rm_eo - amatch[1].rm_so + 1,"%s",pstring + amatch[1].rm_so);
+		snprintf(title_buf,amatch[2].rm_eo - amatch[2].rm_so + 1,"%s",pstring + amatch[2].rm_so);
+		printf("title [%s] link [%s]\n",title_buf,link_buf);
+		bzero(link_buf,sizeof(link_buf));
+		bzero(title_buf,sizeof(title_buf));
+		// 数据源偏移处理
+		pstring += amatch[0].rm_eo;
+	}
+
+
+		
+	return 0;
+}
