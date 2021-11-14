@@ -17,13 +17,14 @@
 
 int main()
 {
-	int fd = open("new.html",O_RDWR); // 打开文件大小
+	int fd = open("news.html",O_RDWR); // 打开文件大小
 
 	int fsize = lseek(fd,0,SEEK_END); // 计算文件大小
 
 	char *pstring = NULL;
-
+	char *jstring = NULL;
 	pstring = mmap(NULL,fsize,PROT_READ,MAP_PRIVATE,fd,0); // 文件内容私有映射
+	jstring = pstring;
 
 	regex_t areg;
 
@@ -48,7 +49,9 @@ int main()
 		pstring += amatch[0].rm_eo;
 	}
 
-
+	regfree(&areg);
+	close(fd);
+	munmap(jstring,fsize);
 		
 	return 0;
 }
