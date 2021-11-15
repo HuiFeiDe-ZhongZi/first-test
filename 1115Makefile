@@ -1,0 +1,50 @@
+#使用伪目标保护功能目标，保护之后，即使出现了与功能目标相同名的文件，也不会影响功能目标的执行
+.PHONY:clean install distclean output
+
+
+#常见变量
+
+TARGET = app #存储目标名
+CC = gcc #存储编译器
+INCLUDE_PATH = ../include #存储头文件路径
+INSTALL_PATH = /usr/bin/ #程序安装路径
+LIBRARY_PATH = ../library #库路径
+CFLAGS=-I$(INCLUDE_PATH) -c -g -Wall #存储编译时选项
+CPPFLAGS = -D -L -l -O1 -O2 -O3 #存储预处理选项
+LDFLAGS = -L$(LIBRARY_PATH) -lpthread -lssl #存储库选项 -L库位置 -l库名
+
+RM = sudo rm -rf
+CP = sudo cp
+
+SFILE = $(wildcard *.c)
+DFILE = $(patsubst %.c,%.o,$(SFILE))
+
+#主编译目标
+
+$(TARGET):$(DFILE)
+	$(CC) $^ $(LDFLAGS) -o $@
+#从编译目标
+
+%.o:%.c
+	$(CC) $(CFLAGS) $<
+
+
+#功能目标
+
+clean:
+	$(RM) $(DFILE) $(TARGET)
+
+install:
+	$(CP) $(TARGET) $(INSTALL_PATH)
+
+distclean:
+	$(RM) $(INSTALL_PATH)$(TARGET) #使用RM时仔细检查语句
+
+output:
+	-@echo "test message.."
+
+#默认情况下，makefile中某条命令失败，导致makefile脚本结束
+
+#常见的命令修饰符
+# 使用@修饰命令，隐藏命令本身只执行或显示结果
+# 使用-修饰命令，如果本条命令出现异常，忽略异常继续执行
