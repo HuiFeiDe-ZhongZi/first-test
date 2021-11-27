@@ -11,6 +11,7 @@ typedef struct bucket
 
 void Sort(Bucket *pHead)
 {
+	if(pHead == NULL || pHead->pNext == NULL)return;
 	Bucket *pNode = pHead;
 	Bucket *pTemp = pHead;
 	while(pNode->pNext != NULL)
