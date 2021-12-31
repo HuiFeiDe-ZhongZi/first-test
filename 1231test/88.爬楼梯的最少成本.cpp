@@ -6,6 +6,7 @@ class Solution {
 			for(int i = 2; i < cost.size(); i++)
 			{
 				int dpi = min(dp0,dp1) + cost[i];
+
 				dp0 = dp1;
 				dp1 = dpi;
 			}
